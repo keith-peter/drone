@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  drone:
+    container_name: drone
+    image: drone/drone:1
+    ports:
+      - 127.0.0.1:8000:80
+    volumes:
+      - /var/lib/drone:/data
+    restart: always
+    env_file:
+      - /etc/drone/server.env
+
+  drone-runner:
+    container_name: drone-runner
+    image: drone/drone-runner-docker:1
+    restart: always
+    depends_on:
+      - drone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - /etc/drone/runner.env
